@@ -1,0 +1,54 @@
+pytme ::= statement*
+statement ::= (dec_state | in_state | out_state | ass_state | return_state | con_state | iter_state | function_state) ';'
+
+// point num1, num2, num3
+// point num1 = 1, num2 = 3
+// point num1, num2 = 5, num3
+// point num1 = 2, num2, num3
+dec_state ::= data_type ident ('=' expression)? (',' ident ('=' expression)?)*
+
+// num2 = input()
+// string num2 = input()
+in_state ::= data_type? ident '=' 'input' '(' ')'
+
+// display(var1)
+out_state ::= 'display' '(' expression ')' ';'
+
+// var = 5
+// var += 5
+ass_state ::= ident ass_op expression
+
+// if (5 < 6) {}
+con_state ::= 'if' '(' expression ')' '{' statement* '}' ('else if' '(' expression ')' '{' statement+ '}')* ('else' '(' expression ')' '{' statement+ '}' )? 
+
+// for (int i = 0, j = 5; i < 5; i++)
+iter_state ::= for_state | while_state | do_while
+for_state ::= 'for' '(' init ';' expression ';' ident ')' '{' statement* '}'
+init ::= data_type? ident '=' integer
+while_state ::= 'while' '(' expression ')' '{' statement* '}'
+do_while_state ::= 'do' '{' statement* '}' 'while' '(' expression ')'
+
+// plaza static abyss sum( point a = 5, point b){
+//     display( 'Sum of' + a + 'and + b +' + '+ a+b' );
+// }
+function_state ::= hero_modifier? return_type ident '(' params? ')' '{' statement* '}'
+return_type ::= data_type | 'abyss'
+params ::= data_type ident (',' data_type ident)*
+
+// dispatch x
+return_state ::= 'dispatch' expression
+
+// add(1, 2);
+call_statement ::= ident '(' args? ')'
+args ::= expression (',' expression)*
+
+expression ::= and_test ('or' and_test)*
+and_test ::= not_test ('and' not_test)*
+not_test ::= ('not')? comparison
+comparison ::= expr (rel_op expr)*
+expr ::= factor (('+' | '-') factor)*
+factor ::= term (('*' | '/' | '%') term)*
+term ::= ('+' | '-') val
+val ::= ident | integer | float | string | boolean | '(' expression ')'
+
+data_type ::= 'point' | 'twin' | 'amw' | 'unsigned' | 'truth' | 'signed' | 'string'
